@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Corunner Sentry Demo</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 32px;
+        background: radial-gradient(circle at 20% 0%, #1c2333 0%, #0b0e14 55%);
+        color: #e6eaf2; font-family: Inter, system-ui, sans-serif;
+      }
+      main { width: min(760px, 100%); }
+      h1 { font-size: 22px; margin: 0 0 4px; }
+      p.lead { margin: 0 0 24px; color: #97a3b6; font-size: 14px; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+      button {
+        appearance: none; border: 1px solid #2a3446; background: #141a24; color: #e6eaf2;
+        padding: 14px 16px; border-radius: 10px; font: inherit; text-align: left; cursor: pointer;
+        transition: border-color .15s, background .15s;
+      }
+      button:hover { border-color: #4a5a75; background: #182030; }
+      button small { display: block; margin-top: 4px; color: #7d8aa0; font-size: 12px; }
+      pre {
+        margin-top: 20px; padding: 14px; min-height: 120px; max-height: 320px; overflow: auto;
+        background: #0e131b; border: 1px solid #1e2735; border-radius: 10px; font-size: 12px;
+      }
+      .ok { color: #6ee7a8; } .err { color: #ff8a8a; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Corunner / Sentry demo app</h1>
+      <p class="lead">Every button produces real telemetry: logs, breadcrumbs, a trace and an error event.</p>
+
+      <div class="grid">
+        <button data-action="js">Throw a JS error<small>TypeError in a click handler</small></button>
+        <button data-action="rejection">Unhandled rejection<small>Promise.reject outside a catch</small></button>
+        <button data-action="fetch">Server error via fetch<small>GET /admin/boom?fail=type</small></button>
+        <button data-action="message">Send a message<small>Sentry.captureMessage</small></button>
+      </div>
+
+      <pre id="out">waiting for input…</pre>
+    </main>
+
+    <script src="/config.js"></script>
+    <script>
+      (function () {
+        var cfg = window.__DEMO_CONFIG__ || {};
+        if (!cfg.sentryBundle) return;
+        var script = document.createElement('script');
+        script.src = cfg.sentryBundle;
+        script.crossOrigin = 'anonymous';
+        document.head.appendChild(script);
+      })();
+    </script>
+    <script src="/web/app.js"></script>
+  </body>
+</html>
